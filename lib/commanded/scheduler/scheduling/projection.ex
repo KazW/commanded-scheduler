@@ -44,9 +44,9 @@ defmodule Commanded.Scheduler.Projection do
     schedule = %Schedule{
       schedule_uuid: schedule_uuid,
       name: name,
-      command: Map.from_struct(command),
+      command: command,
       command_type: command_type,
-      due_at: NaiveDateTime.truncate(due_at, :second)
+      due_at: NaiveDateTime.from_iso8601!(due_at) |> NaiveDateTime.truncate(:second)
     }
 
     Ecto.Multi.insert(multi, :schedule_once, schedule)

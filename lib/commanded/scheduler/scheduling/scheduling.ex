@@ -9,6 +9,7 @@ defmodule Commanded.Scheduler.Scheduling do
 
   alias Commanded.Scheduler.{
     Dispatcher,
+    Convert,
     Jobs,
     Repo,
     ScheduleCancelled,
@@ -52,11 +53,13 @@ defmodule Commanded.Scheduler.Scheduling do
 
   # Execute the command using the configured router when triggered at its
   # scheduled date/time.
-  def handle(%ScheduleTriggered{command: command}, metadata) do
+  def handle(%ScheduleTriggered{command: command, command_type: command_type}, metadata) do
     %{
       correlation_id: correlation_id,
       event_id: event_id
     } = metadata
+
+    command = Convert.to_struct(command_type, command)
 
     Logger.debug(fn -> "Attempting to dispatch scheduled command: #{inspect(command)}" end)
 
