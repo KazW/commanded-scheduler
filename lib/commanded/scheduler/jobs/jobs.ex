@@ -240,5 +240,11 @@ defmodule Commanded.Scheduler.Jobs do
   defp epoch_seconds(%NaiveDateTime{} = due_at),
     do: NaiveDateTime.diff(due_at, ~N[1970-01-01 00:00:00], :second)
 
+  defp epoch_seconds(due_at) when is_binary(due_at),
+    do:
+      due_at
+      |> NaiveDateTime.from_iso8601!()
+      |> NaiveDateTime.diff(~N[1970-01-01 00:00:00], :second)
+
   defp utc_now, do: NaiveDateTime.utc_now()
 end
